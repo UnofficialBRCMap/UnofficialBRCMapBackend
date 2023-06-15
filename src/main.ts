@@ -5,6 +5,7 @@ import fs from 'fs';
 
 import { AppModule } from './app.module';
 import { PrismaClientExceptionFilter } from './prisma/prisma-exception.filter';
+import cookieParser from 'cookie-parser';
 
 const port = process.env.PORT || 8080;
 
@@ -31,6 +32,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+  app.use(cookieParser());
 
   // write swagger json to file
   fs.writeFileSync('./resources/swagger.json', JSON.stringify(document), {

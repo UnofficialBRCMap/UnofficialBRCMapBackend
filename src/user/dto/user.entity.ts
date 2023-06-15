@@ -1,17 +1,15 @@
-import { User } from '@prisma/client';
-
 export class UserEntity {
   id: string;
-  username: string;
   email: string;
   role: string;
-  name: string | null;
+  firstName: string | null;
+  lastName: string | null;
 
-  constructor(user: User) {
+  constructor(user: any) {
     this.id = user.id;
-    this.username = user.username;
     this.email = user.email;
     this.role = user.role.toLowerCase();
-    this.name = user.name;
+    this.firstName = user.firstName;
+    this.lastName = user.lastName;
   }
 }

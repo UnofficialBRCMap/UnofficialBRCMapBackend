@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Patch, Query, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 
 import { GetUser } from '../auth/decorator';
@@ -7,30 +7,32 @@ import { JwtGuard } from '../auth/guard';
 import { UserDto, UserEntity } from './dto';
 import { UserService } from './user.service';
 
-@UseGuards(JwtGuard)
 @ApiTags('Users')
-@ApiBearerAuth()
-@Controller('users')
+@Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @UseGuards(JwtGuard)
   @Get('me')
-  getMe(@GetUser() user: User): UserEntity {
+  async getMe(@GetUser() user: User) {
     return new UserEntity(user);
   }
 
-  @Patch()
-  async editUser(
-    @GetUser('id') userId: string,
-    @Body() dto: UserDto,
-  ): Promise<UserEntity> {
-    return new UserEntity(await this.userService.editUser(userId, dto));
+  @Get('/exists/:id')
+  async exists(@Param('id') id: string) {
+    return await this.userService.exists(id);
   }
 
+  @UseGuards(JwtGuard)
+  @Patch()
+  async editUser(@GetUser('id') userId: string, @Body() dto: UserDto) {
+    return new UserEntity(await this.userService.editUser(userId, dto));
+  }
+  @UseGuards(JwtGuard)
   @Patch('/role')
-  async changeUserRole(
-    @GetUser('id') userId: string,
-    @Query('role') role: string,
-  ): Promise<UserEntity> {
-    return new UserEntity(await this.userService.changeUserRole(userId, role));
+  async changeUserRole(@GetUser('id') userId: string, @Query('role') role: string) {
+    const user = new UserEntity(await this.userService.changeUserRole(userId, role));
+    console.log(user);
+    return user;
   }
 }
