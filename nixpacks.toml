@@ -1,2 +1,5 @@
+[phases.build]
+cmds = ['npx prisma generate']
+
 [start]
 cmd = 'pnpm start:prod'

@@ -18,7 +18,7 @@
     "build": "rm -rf dist && nest build",
     "start": "npm run db:dev:restart && nest start",
     "start:test": "npm run db:test:restart && dotenv -e .env.test -- nest start",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/src/main",
     "test": "npm run db:test:restart && dotenv -e .env.test -- jest --no-cache  --runInBand",
     "test:cov": "npm run db:test:restart && dotenv -e .env.test -- jest --no-cache --runInBand --coverage",
     "test:load": "npm run build && npm run db:test:restart && docker-compose up k6-auth k6-review k6-room k6-shop k6-user",
