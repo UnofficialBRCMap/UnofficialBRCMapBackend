@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { arts, camps, users } from './seed-data';
+import { camps, users } from './seed-data';
 
 const prisma = new PrismaClient();
 
