@@ -15,6 +15,7 @@ import { Camp } from '@prisma/client';
 import { JwtGuard } from '../auth/guard';
 import { CampService } from './camp.service';
 import { CampDto, CampEntity } from './dto';
+import { IResponse } from '../common/interfaces/response.interface';
 
 @UseGuards(JwtGuard)
 @ApiTags('Camps')
@@ -44,6 +45,12 @@ export class CampController {
     @Body() dto: CampDto,
   ): Promise<CampEntity> {
     return new CampEntity(await this.campService.editCampById(CampId, dto));
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('brc_data/:year')
+  async getRemoteCamps(@Param('year') year: string): Promise<IResponse> {
+    return await this.campService.getRemoteCamps(year);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
