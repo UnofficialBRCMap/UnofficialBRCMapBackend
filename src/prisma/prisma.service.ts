@@ -14,12 +14,11 @@ export class PrismaService extends PrismaClient {
     });
   }
 
+  // update this function to return the types of the models you've generated
   cleanDb() {
     return this.$transaction([
-      this.usersOnRoom.deleteMany(),
-      this.review.deleteMany(),
-      this.shop.deleteMany(),
-      this.room.deleteMany(),
+      this.camp.deleteMany(),
+      this.art.deleteMany(),
       this.user.deleteMany(),
     ]);
   }
