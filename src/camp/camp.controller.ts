@@ -8,16 +8,16 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Camp } from '@prisma/client';
-import { JwtGuard } from '../auth/guard';
+// import { JwtGuard } from '../auth/guard';
 import { CampService } from './camp.service';
 import { CampDto, CampEntity } from './dto';
 import { IResponse } from '../common/interfaces/response.interface';
 
-@UseGuards(JwtGuard)
+// @UseGuards(JwtGuard)
 @ApiTags('Camps')
 @Controller('camps')
 export class CampController {

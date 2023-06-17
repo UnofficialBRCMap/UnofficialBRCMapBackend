@@ -1,4 +1,4 @@
- {
+{
   "name": "nest-api",
   "version": "1.0.0",
   "description": "",
@@ -17,6 +17,7 @@
     "db:test:restart": "npm run db:test:rm && npm run db:test:up && sleep 1 && npm run prisma:test:deploy",
     "build": "rm -rf dist && nest build",
     "start": "npm run db:dev:restart && nest start",
+    "start:debug": "npm run db:dev:restart && nest start --debug --watch",
     "start:test": "npm run db:test:restart && dotenv -e .env.test -- nest start",
     "start:prod": "node dist/src/main",
     "test": "npm run db:test:restart && dotenv -e .env.test -- jest --no-cache  --runInBand",
@@ -34,12 +35,13 @@
     "@nestjs/jwt": "^9.0.0",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.5",
-    "@nestjs/swagger": "^6.0.4",
+    "@nestjs/swagger": "^6.3.0",
     "@prisma/client": "^4.1.0",
     "argon2": "^0.28.7",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "cookie-parser": "^1.4.6",
+    "cross-fetch": "^3.1.6",
     "pactum-matchers": "^1.1.5",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
