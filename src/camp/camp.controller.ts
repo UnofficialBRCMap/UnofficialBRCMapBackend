@@ -13,7 +13,6 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Camp } from '@prisma/client';
 import { JwtGuard } from '../auth/guard';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CampService } from './camp.service';
 import { CampDto, CampEntity } from './dto';
 
@@ -21,22 +20,22 @@ import { CampDto, CampEntity } from './dto';
 @ApiTags('Camps')
 @Controller('camps')
 export class CampController {
-  constructor(private CampService: CampService) {}
+  constructor(private campService: CampService) {}
 
   @Get()
   async getCamps(): Promise<CampEntity[]> {
-    const Camps = await this.CampService.getCamps();
+    const Camps = await this.campService.getCamps();
     return Camps.map((Camp: Camp) => new CampEntity(Camp));
   }
 
   @Get(':CampId')
   async getCampById(@Param('CampId') CampId: string): Promise<CampEntity> {
-    return new CampEntity(await this.CampService.getCampById(CampId));
+    return new CampEntity(await this.campService.getCampById(CampId));
   }
 
   @Post()
   async createCamp(@Body() dto: CampDto): Promise<CampEntity> {
-    return new CampEntity(await this.CampService.createCamp(dto));
+    return new CampEntity(await this.campService.createCamp(dto));
   }
 
   @Patch(':CampId')
@@ -44,12 +43,12 @@ export class CampController {
     @Param('CampId') CampId: string,
     @Body() dto: CampDto,
   ): Promise<CampEntity> {
-    return new CampEntity(await this.CampService.editCampById(CampId, dto));
+    return new CampEntity(await this.campService.editCampById(CampId, dto));
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':CampId')
   deleteCampById(@Param('CampId') CampId: string) {
-    return this.CampService.deleteCampById(CampId);
+    return this.campService.deleteCampById(CampId);
   }
 }

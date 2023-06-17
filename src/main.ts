@@ -24,8 +24,8 @@ async function bootstrap() {
 
   // swagger config
   const config = new DocumentBuilder()
-    .setTitle('NestJs Boilerplate API')
-    .setDescription('NestJs Boilerplate API')
+    .setTitle('Unofficial BRC Backend API')
+    .setDescription('Unofficial BRC Backend API')
     .setVersion('1.0')
     .addTag('NestJs')
     .addBearerAuth()

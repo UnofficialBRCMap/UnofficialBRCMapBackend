@@ -6,9 +6,9 @@ import { AuthModule } from './auth/auth.module';
 import { LoggingInterceptor } from './common/logging.interceptor';
 import { PrismaModule } from './prisma/prisma.module';
 import { ReviewModule } from './review/review.module';
-import { RoomModule } from './room/room.module';
 import { ShopModule } from './shop/shop.module';
 import { UserModule } from './user/user.module';
+import { CampModule } from './camp/camp.module';
 
 const validationPipeOptions = {
   enableDebugMessages: true,
@@ -28,9 +28,9 @@ const validationPipeOptions = {
     }),
     AuthModule,
     ReviewModule,
-    RoomModule,
     ShopModule,
     UserModule,
+    CampModule,
     PrismaModule,
   ],
   providers: [

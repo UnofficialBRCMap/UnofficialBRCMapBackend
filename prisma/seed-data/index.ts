@@ -3,3 +3,5 @@ export * from './rooms';
 export * from './shops';
 export * from './users';
 export * from './usersOnRooms';
+export * from './arts';
+export * from './camps';
