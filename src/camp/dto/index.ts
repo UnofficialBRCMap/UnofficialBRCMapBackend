@@ -1,2 +1,2 @@
-export * from './shop.dto';
-export * from './shop.entity';
+export * from './camp.dto';
+export * from './camp.entity';
