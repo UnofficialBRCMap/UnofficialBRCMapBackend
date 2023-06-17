@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // success: true => message, data
 // success: false => errorMessage, error
 import { IResponse } from '../interfaces/response.interface';
@@ -11,7 +12,7 @@ export class ResponseError implements IResponse {
       new Date().toString() +
         ' - [Response]: ' +
         infoMessage +
-        (data ? ' - ' + JSON.stringify(data) : '')
+        (data ? ' - ' + JSON.stringify(data) : ''),
     );
   }
   message: string;
@@ -32,9 +33,7 @@ export class ResponseSuccess implements IResponse {
         if (offuscateRequest && offuscateRequest.token)
           offuscateRequest.token = '*******';
         console.log(
-          new Date().toString() +
-            ' - [Response]: ' +
-            JSON.stringify(offuscateRequest)
+          new Date().toString() + ' - [Response]: ' + JSON.stringify(offuscateRequest),
         );
       } catch (error) {}
     }
