@@ -10,10 +10,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CampService {
-  constructor(
-    private prisma: PrismaService,
-    private config: ConfigService,
-    ) {}
+  constructor(private prisma: PrismaService, private config: ConfigService) {}
 
   getCamps(): Promise<Camp[]> {
     return this.prisma.camp.findMany();
@@ -105,7 +102,11 @@ export class CampService {
 
   // fetchRemoteCamps fetches the remote camps from the remote API
   async fetchRemoteCamps(year: string): Promise<Camp[]> {
-    const response = await fetch(`https://${this.config.get('BRC_API_TOKEN')}:@api.burningman.org/api/v1/camp?year=${year}`);
+    const response = await fetch(
+      `https://${this.config.get(
+        'BRC_API_TOKEN',
+      )}:@api.burningman.org/api/v1/camp?year=${year}`,
+    );
     const data = await response.json();
     return data.data;
   }
