@@ -28,8 +28,8 @@ export class CampController {
     return Camps.map((Camp: Camp) => new CampEntity(Camp));
   }
 
-  @Get(':CampId')
-  async getCampById(@Param('CampId') CampId: string): Promise<CampEntity> {
+  @Get(':campId')
+  async getCampById(@Param('campId') CampId: string): Promise<CampEntity> {
     return new CampEntity(await this.campService.getCampById(CampId));
   }
 
@@ -38,17 +38,17 @@ export class CampController {
     return new CampEntity(await this.campService.createCamp(dto));
   }
 
-  @Patch(':CampId')
+  @Patch(':campId')
   async editCampById(
-    @Param('CampId') CampId: string,
+    @Param('campId') CampId: string,
     @Body() dto: CampDto,
   ): Promise<CampEntity> {
     return new CampEntity(await this.campService.editCampById(CampId, dto));
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete(':CampId')
-  deleteCampById(@Param('CampId') CampId: string) {
+  @Delete(':campId')
+  deleteCampById(@Param('campId') CampId: string) {
     return this.campService.deleteCampById(CampId);
   }
 }

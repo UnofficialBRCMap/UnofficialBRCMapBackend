@@ -12,10 +12,10 @@ export class CampService {
     return this.prisma.camp.findMany();
   }
 
-  async getCampById(CampId: string): Promise<Camp> {
+  async getCampById(campId: string): Promise<Camp> {
     const Camp = await this.prisma.camp.findUnique({
       where: {
-        id: CampId,
+        id: campId,
       },
     });
 
@@ -32,10 +32,10 @@ export class CampService {
     });
   }
 
-  async editCampById(CampId: string, dto: CampDto): Promise<Camp> {
+  async editCampById(campId: string, dto: CampDto): Promise<Camp> {
     const Camp = await this.prisma.camp.findUnique({
       where: {
-        id: CampId,
+        id: campId,
       },
     });
 
@@ -43,7 +43,7 @@ export class CampService {
 
     return this.prisma.camp.update({
       where: {
-        id: CampId,
+        id: campId,
       },
       data: {
         ...dto,
@@ -51,10 +51,10 @@ export class CampService {
     });
   }
 
-  async deleteCampById(CampId: string) {
+  async deleteCampById(campId: string) {
     const Camp = await this.prisma.camp.findUnique({
       where: {
-        id: CampId,
+        id: campId,
       },
     });
 
@@ -62,7 +62,7 @@ export class CampService {
 
     await this.prisma.camp.delete({
       where: {
-        id: CampId,
+        id: campId,
       },
     });
   }
