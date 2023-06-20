@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Location {
-  id                Int     @id @default(autoincrement())
+  id                String  @id @default(cuid())
   string            String?
   frontage          String?
   intersection      String?
@@ -23,8 +23,9 @@ model Location {
   category          String?
   gps_latitude      Float?
   gps_longitude     Float?
-  Camp              Camp[]
-  Art               Art[]
+  location          Camp?   @relation(fields: [id], references: [id])
+
+  @@map("locations")
 }
 
 model Camp {
@@ -32,42 +33,40 @@ model Camp {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  year            String
-  name            String
-  url             String?
-  contact_email   String?
-  hometown        String?
-  description     String?
-  location        Location? @relation(fields: [locationId], references: [id])
-  location_string String?
-  locationId      Int?
+  year          String
+  name          String
+  url           String?
+  contact_email String?
+  hometown      String?
+  description   String?
+  location      Location?
 
   @@map("camps")
 }
 
-model Art {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// model Art {
+//   id        String   @id @default(cuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
 
-  year                 String
-  name                 String
-  url                  String?
-  contact_email        String?
-  hometown             String?
-  description          String?
-  artist               String?
-  category             String?
-  program              String?
-  donation_link        String?
-  guided_tours         Int?
-  self_guided_tour_map Int?
-  location             Location? @relation(fields: [locationId], references: [id])
-  location_string      String?
-  thumbnail_url        String?
-  locationId           Int?
-  @@map("arts")
-}
+//   year                 String
+//   name                 String
+//   url                  String?
+//   contact_email        String?
+//   hometown             String?
+//   description          String?
+//   artist               String?
+//   category             String?
+//   program              String?
+//   donation_link        String?
+//   guided_tours         Int?
+//   self_guided_tour_map Int?
+//   location            Location?
+//   thumbnail_url        String?
+
+
+//   @@map("arts")
+// }
 
 model User {
   id        String   @id @default(cuid())
@@ -79,7 +78,6 @@ model User {
   role                 Role      @default(USER)
   email                String    @unique
   phone                String?
-  stripeId             String?   @unique
   hash                 String
   allowMultiple        Boolean   @default(false)
   resetPasswordToken   String?   @unique

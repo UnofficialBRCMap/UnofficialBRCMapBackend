@@ -108,6 +108,7 @@ export class CampService {
     )}:@api.burningman.org/api/v1/camp?year=${year}`
     const response = await fetch(url);
     const data = await response.json();
-    return data.data;
+    // for each unit of data, create a new Camp object
+    return data;
   }
 }
