@@ -25,7 +25,7 @@ export class CampDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  year: string;
+  year: number;
 
   @ApiProperty()
   @IsString()

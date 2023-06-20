@@ -1,20 +1,18 @@
 import { Camp } from '@prisma/client';
 
 export class CampEntity {
-  id: string;
+  uid: string;
   createdAt: Date;
   updatedAt: Date;
-  year: string;
+  year: number;
   name: string;
   url: string | null;
   contact_email: string | null;
   hometown: string | null;
   description: string | null;
-  location_string: string | null;
-  locationId: number | null;
 
   constructor(camp: Camp) {
-    this.id = camp.id;
+    this.uid = camp.uid;
     this.createdAt = camp.createdAt;
     this.updatedAt = camp.updatedAt;
     this.name = camp.name;
@@ -23,7 +21,5 @@ export class CampEntity {
     this.url = camp.url;
     this.contact_email = camp.contact_email;
     this.hometown = camp.hometown;
-    this.location_string = camp.location_string;
-    this.locationId = camp.locationId;
   }
 }

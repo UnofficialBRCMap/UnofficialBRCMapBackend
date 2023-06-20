@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   await prisma.camp.deleteMany();
-  await prisma.art.deleteMany();
+  // await prisma.art.deleteMany();
   await prisma.user.deleteMany();
 
   for (const user of users) {

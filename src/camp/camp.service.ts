@@ -6,7 +6,7 @@ import { ResponseSuccess, ResponseError } from '../common/dto/response.dto';
 import { IResponse } from '../common/interfaces/response.interface';
 
 import { PrismaService } from '../prisma/prisma.service';
-import { CampDto } from './dto';
+import { CampDto, CampEntity } from './dto';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class CampService {
   async getCampById(campId: string): Promise<Camp> {
     const Camp = await this.prisma.camp.findUnique({
       where: {
-        id: campId,
+        uid: campId,
       },
     });
 
@@ -40,7 +40,7 @@ export class CampService {
   async editCampById(campId: string, dto: CampDto): Promise<Camp> {
     const Camp = await this.prisma.camp.findUnique({
       where: {
-        id: campId,
+        uid: campId,
       },
     });
 
@@ -48,7 +48,7 @@ export class CampService {
 
     return this.prisma.camp.update({
       where: {
-        id: campId,
+        uid: campId,
       },
       data: {
         ...dto,
@@ -59,7 +59,7 @@ export class CampService {
   async deleteCampById(campId: string) {
     const Camp = await this.prisma.camp.findUnique({
       where: {
-        id: campId,
+        uid: campId,
       },
     });
 
@@ -67,7 +67,7 @@ export class CampService {
 
     await this.prisma.camp.delete({
       where: {
-        id: campId,
+        uid: campId,
       },
     });
   }
@@ -78,16 +78,16 @@ export class CampService {
       const remoteCamps = await this.fetchRemoteCamps(year);
       const Camps = await this.prisma.camp.findMany();
 
-      const remoteCampIds = remoteCamps.map((Camp: Camp) => Camp.id);
-      const CampIds = Camps.map((Camp) => Camp.id);
+      const remoteCampIds = remoteCamps.map((Camp: Camp) => Camp.uid);
+      const CampIds = Camps.map((Camp) => Camp.uid);
 
       const CampsToDelete = CampIds.filter((CampId) => !remoteCampIds.includes(CampId));
       const CampsToCreate = remoteCamps.filter(
-        (Camp: Camp) => !CampIds.includes(Camp.id),
+        (Camp: Camp) => !CampIds.includes(Camp.uid),
       );
       await this.prisma.camp.deleteMany({
         where: {
-          id: {
+          uid: {
             in: CampsToDelete,
           },
         },
@@ -103,12 +103,12 @@ export class CampService {
 
   // fetchRemoteCamps fetches the remote camps from the remote API
   async fetchRemoteCamps(year: string): Promise<Camp[]> {
+    // TODO: move this to a config file / env variable and use the config service
     const url = `https://${this.config.get(
       'BRC_API_TOKEN',
     )}:@api.burningman.org/api/v1/camp?year=${year}`
     const response = await fetch(url);
-    const data = await response.json();
-    // for each unit of data, create a new Camp object
-    return data;
+    const campData = await response.json();
+    return campData.map((camp: Camp) => new CampEntity(camp));
   }
 }
