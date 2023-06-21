@@ -15,7 +15,7 @@ export class CampEntity {
     this.uid = camp.uid;
     this.createdAt = camp.createdAt;
     this.updatedAt = camp.updatedAt;
-    this.name = camp.name;
+    this.name = String(camp.name);
     this.description = camp.description;
     this.year = camp.year;
     this.url = camp.url;

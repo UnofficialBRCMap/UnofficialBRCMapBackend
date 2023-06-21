@@ -2,6 +2,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Camp } from '@prisma/client';
 import fetch from 'cross-fetch';
+import { PrismaClientValidationError } from "@prisma/client/runtime";
 import { ResponseSuccess, ResponseError } from '../common/dto/response.dto';
 import { IResponse } from '../common/interfaces/response.interface';
 
@@ -92,11 +93,20 @@ export class CampService {
           },
         },
       });
-      await this.prisma.camp.createMany({
-        data: CampsToCreate,
-      });
+
+      CampsToCreate.map(async (Camp:Camp) => (
+        await this.prisma.camp.create({ data: Camp })
+        ));
+
+      // await this.prisma.camp.createMany({
+      //   data: CampsToCreate,
+      // });
       return new ResponseSuccess('UPDATED DB WITH BRC CAMPS DATA', null);
     } catch (error) {
+      if (error instanceof PrismaClientValidationError) { 
+      // TODO: Figure out why the error isn't showing up right
+      return new ResponseError('FAILED TO UPDATE DB WITH BRC CAMPS DATA', error.message);
+      }
       return new ResponseError('FAILED TO UPDATE DB WITH BRC CAMPS DATA', error);
     }
   }
