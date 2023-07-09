@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // success: true => message, data
 // success: false => errorMessage, error
 

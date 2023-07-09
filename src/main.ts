@@ -12,6 +12,7 @@ const port = process.env.PORT || 8080;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['log', 'error', 'warn'],
+    snapshot: true,
   });
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
@@ -24,8 +25,8 @@ async function bootstrap() {
 
   // swagger config
   const config = new DocumentBuilder()
-    .setTitle('NestJs Boilerplate API')
-    .setDescription('NestJs Boilerplate API')
+    .setTitle('Unofficial BRC Backend API')
+    .setDescription('Unofficial BRC Backend API')
     .setVersion('1.0')
     .addTag('NestJs')
     .addBearerAuth()
