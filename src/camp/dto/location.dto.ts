@@ -20,55 +20,60 @@ export class LocationDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  string?: string;
+  string: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  frontage?: string;
+  frontage: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  intersection?: string;
+  intersection: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  intersection_type?: string;
+  intersection_type: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  dimensions?: string;
+  dimensions: string;
 
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  hour?: number;
+  hour: number;
 
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  minute?: number;
+  minute: number;
 
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  distance?: number;
+  distance: number;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  category?: string;
+  category: string;
 
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  gps_latitude?: number;
+  gps_latitude: number;
 
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  gps_longitude?: number;
+  gps_longitude: number;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  campdId: string;
 }

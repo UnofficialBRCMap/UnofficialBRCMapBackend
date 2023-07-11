@@ -23,22 +23,26 @@ import { IResponse } from '../common/interfaces/response.interface';
 export class CampController {
   constructor(private campService: CampService) {}
 
+  // Returns all camps
   @Get()
   async getCamps(): Promise<CampEntity[]> {
     const Camps = await this.campService.getCamps();
     return Camps.map((Camp: Camp) => new CampEntity(Camp));
   }
 
+  // Returns a single camp by its id
   @Get(':campId')
   async getCampById(@Param('campId') CampId: string): Promise<CampEntity> {
     return new CampEntity(await this.campService.getCampById(CampId));
   }
 
+  // Creates a new camp entirely
   @Post()
   async createCamp(@Body() dto: CampDto): Promise<CampEntity> {
     return new CampEntity(await this.campService.createCamp(dto));
   }
 
+  // Allows you to patch the camp data of a single camp
   @Patch(':campId')
   async editCampById(
     @Param('campId') CampId: string,
@@ -56,12 +60,14 @@ export class CampController {
     return new CampEntity(await this.campService.editCampLocation(CampId, dto));
   }
 
+  // Seeds the database with the BRC camp data for a given year. Overwrites existing data.
   @HttpCode(HttpStatus.OK)
   @Get('brc_data/:year')
   async getRemoteCamps(@Param('year') year: string): Promise<IResponse> {
     return await this.campService.getRemoteCamps(year);
   }
 
+  // Deletes a single camp by ID
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':campId')
   deleteCampById(@Param('campId') CampId: string) {
