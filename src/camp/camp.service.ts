@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Camp } from '@prisma/client';
+import { Camp, Location } from '@prisma/client';
 import fetch from 'cross-fetch';
 import { PrismaClientValidationError } from "@prisma/client/runtime";
 import { ResponseSuccess, ResponseError } from '../common/dto/response.dto';
@@ -21,6 +21,19 @@ export class CampService {
     const Camp = await this.prisma.camp.findUnique({
       where: {
         uid: campId,
+      },
+    });
+
+    if (!Camp) throw new NotFoundException('Camp not Found');
+
+    return Camp;
+  }
+
+  // I can't believe more than one camp exists per name, but it's a concern. Should this be findMany?
+  async getCampByName(campName: string): Promise<Camp> {
+    const Camp = await this.prisma.camp.findFirst({
+      where: {
+        name: campName,
       },
     });
 
@@ -72,7 +85,32 @@ export class CampService {
     });
   }
 
-  // getRemoteCamps fetches the remote camps from the remote API and saves them to the db
+  // editCampLocation updates the location of a camp
+  async editCampLocation(campId: string, location: Location): Promise<Camp> {
+    const Camp = await this.prisma.camp.findUnique({
+      where: {
+        uid: campId,
+      },
+    });
+
+    if (!Camp) throw new NotFoundException('Camp not Found');
+
+    return this.prisma.camp.update({
+      where: {
+        uid: campId,
+      },
+      data: {
+        location: {
+          update: {
+            ...location,
+          },
+        },
+      },
+    });
+  }
+
+
+  // getRemoteCamps fetches the cammp information from the BRC API and seeds the database
   async getRemoteCamps(year: string): Promise<IResponse> {
     try {
       const remoteCamps = await this.fetchRemoteCamps(year);
@@ -97,9 +135,6 @@ export class CampService {
         await this.prisma.camp.create({ data: Camp })
         ));
 
-      // await this.prisma.camp.createMany({
-      //   data: CampsToCreate,
-      // });
       return new ResponseSuccess('UPDATED DB WITH BRC CAMPS DATA', null);
     } catch (error) {
       if (error instanceof PrismaClientValidationError) { 

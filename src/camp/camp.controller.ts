@@ -14,7 +14,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Camp } from '@prisma/client';
 // import { JwtGuard } from '../auth/guard';
 import { CampService } from './camp.service';
-import { CampDto, CampEntity } from './dto';
+import { CampDto, CampEntity, LocationDto } from './dto';
 import { IResponse } from '../common/interfaces/response.interface';
 
 // @UseGuards(JwtGuard)
@@ -45,6 +45,15 @@ export class CampController {
     @Body() dto: CampDto,
   ): Promise<CampEntity> {
     return new CampEntity(await this.campService.editCampById(CampId, dto));
+  }
+
+  // Allows you to patch the camp location of a single camp
+  @Patch(':campId/location')
+  async editCampLocationById(
+    @Param('campId') CampId: string,
+    @Body() dto: LocationDto,
+  ): Promise<CampEntity> {
+    return new CampEntity(await this.campService.editCampLocation(CampId, dto));
   }
 
   @HttpCode(HttpStatus.OK)

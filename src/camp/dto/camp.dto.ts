@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty, IsString, IsOptional, IsNumber } from 'class-validator';
+import { IsDate, IsNotEmpty, IsString, IsOptional } from 'class-validator';
 
 export class CampDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  id: string;
+  uid: string;
 
   @ApiProperty()
   @IsDate()
@@ -51,14 +51,4 @@ export class CampDto {
   @IsString()
   @IsOptional()
   hometown?: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsOptional()
-  location_string?: string;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsOptional()
-  locationId?: number;
 }

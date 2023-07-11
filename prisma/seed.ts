@@ -13,13 +13,9 @@ async function main() {
     await prisma.user.create({ data: user });
   }
 
-  // for (const art of arts) {
-  //   await prisma.art.create({ data: art });
-  // }
+  // await prisma.art.createMany({ data: arts });
 
-  for (const camp of camps) {
-    await prisma.camp.create({ data: camp });
-  }
+  await prisma.camp.createMany({ data: camps });
 }
 
 main()
