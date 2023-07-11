@@ -5,7 +5,6 @@ import fetch from 'cross-fetch';
 import { PrismaClientValidationError } from "@prisma/client/runtime";
 import { ResponseSuccess, ResponseError } from '../common/dto/response.dto';
 import { IResponse } from '../common/interfaces/response.interface';
-
 import { PrismaService } from '../prisma/prisma.service';
 import { CampDto, CampEntity } from './dto';
 import { ConfigService } from '@nestjs/config';
