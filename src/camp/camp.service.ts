@@ -100,13 +100,19 @@ export class CampService {
         uid: campId,
       },
       data: {
-        location: {
-          update: {
-            ...location,
+        locations: {
+          connectOrCreate: [
+          {
+            create: location,
+            where: {
+              uid: location.campId,
+            },
+          },
+          ],
           },
         },
       },
-    });
+    );
   }
 
 
