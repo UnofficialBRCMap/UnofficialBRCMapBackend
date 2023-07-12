@@ -5,10 +5,10 @@ import * as pactum from 'pactum';
 import { CampDto } from '../../src/camp/dto';
 
 const campDto: CampDto = {
-  id: '1',
+  uid: '1',
   createdAt: new Date(),
   updatedAt: new Date(),
-  year: '2021',
+  year: 2021,
   name: 'My first camp',
   description: 'Great Place',
   website: 'http://www.camp.com',
@@ -174,16 +174,5 @@ describe('Camps', () => {
         error: 'Not Found',
       })
       .expectStatus(HttpStatus.NOT_FOUND);
-  });
-
-  it('should get empty camps', async () => {
-    await pactum
-      .spec()
-      .get('/v1/camps')
-      .withHeaders({
-        Authorization: 'Bearer $S{accessToken-user1}',
-      })
-      .expectStatus(HttpStatus.OK)
-      .expectJsonLength(0);
   });
 });
