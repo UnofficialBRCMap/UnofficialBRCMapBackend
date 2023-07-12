@@ -13,13 +13,8 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 // import { JwtGuard } from '../auth/guard';
 import { CampService } from './camp.service';
-import {
-  CampDto,
-  CampEntity,
-  CampWithLocations,
-  CampWithLocationsEntity,
-  LocationDto,
-} from './dto';
+import { CampDto, CampEntity, CampWithLocations, CampWithLocationsEntity } from './dto';
+import { LocationDto } from '../location/dto';
 import { IResponse } from '../common/interfaces/response.interface';
 
 // @UseGuards(JwtGuard)
@@ -69,10 +64,8 @@ export class CampController {
   async editCampLocationById(
     @Param('campId') CampId: string,
     @Body() dto: LocationDto,
-  ): Promise<CampWithLocationsEntity> {
-    return new CampWithLocationsEntity(
-      await this.campService.editCampLocation(CampId, dto),
-    );
+  ): Promise<CampEntity> {
+    return new CampEntity(await this.campService.editCampLocation(CampId, dto));
   }
 
   // Seeds the database with the BRC camp data for a given year. Overwrites existing data.

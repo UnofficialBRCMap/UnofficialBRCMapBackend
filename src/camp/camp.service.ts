@@ -97,7 +97,7 @@ export class CampService {
   }
 
   // editCampLocation updates the location of a camp
-  async editCampLocation(campId: string, location: Location): Promise<CampWithLocations> {
+  async editCampLocation(campId: string, location: Location): Promise<Camp> {
     const Camp = await this.prisma.camp.findUnique({
       where: {
         uid: campId,
@@ -106,40 +106,54 @@ export class CampService {
 
     if (!Camp) throw new NotFoundException('Camp not Found');
 
-    return this.prisma.camp.update({
+    return this.prisma.camp.upsert({
       where: {
         uid: campId,
       },
-      include: {
-        locations: true,
-      },
-      data: {
+      update: {
         locations: {
           connectOrCreate: [
-          {
-            create: 
             {
-              uid: location.uid,
-              createdAt: location.createdAt,
-              updatedAt: location.updatedAt,
-              string: location.string,
-              frontage: location.frontage,
-              intersection: location.intersection,
-              intersection_type: location.intersection_type,
-              dimensions: location.dimensions,
-              hour: location.hour,
-              minute: location.minute,
-              distance: location.distance,
+              create: {
+                string: location.string,
+                frontage: location.frontage,
+                intersection: location.intersection,
+                intersection_type: location.intersection_type,
+                dimensions: location.dimensions,
+                hour: location.hour,
+                minute: location.minute,
+                distance: location.distance,
+              },
+              where: {
+                uid: location.campId,
+              },
             },
-            where: {
-              uid: location.campId,
-            },
-          },
           ],
-          },
         },
       },
-    );
+      create: {
+        ...Camp,
+        locations: {
+          connectOrCreate: [
+            {
+              create: {
+                string: location.string,
+                frontage: location.frontage,
+                intersection: location.intersection,
+                intersection_type: location.intersection_type,
+                dimensions: location.dimensions,
+                hour: location.hour,
+                minute: location.minute,
+                distance: location.distance,
+              },
+              where: {
+                uid: location.campId,
+              },
+            },
+          ],
+        },
+      },
+    });
   }
 
 
