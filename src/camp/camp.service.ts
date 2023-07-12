@@ -6,19 +6,27 @@ import { PrismaClientValidationError } from "@prisma/client/runtime";
 import { ResponseSuccess, ResponseError } from '../common/dto/response.dto';
 import { IResponse } from '../common/interfaces/response.interface';
 import { PrismaService } from '../prisma/prisma.service';
-import { CampDto, CampEntity } from './dto';
+import { CampDto, CampEntity, CampWithLocations } from './dto';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CampService {
   constructor(private prisma: PrismaService, private config: ConfigService) {}
 
-  getCamps(): Promise<Camp[]> {
-    return this.prisma.camp.findMany();
+  getCamps(): Promise<CampWithLocations[]> {
+    return this.prisma.camp.findMany({
+      include: {
+        locations: true,
+      },
+    }
+    );
   }
 
-  async getCampById(campId: string): Promise<Camp> {
+  async getCampById(campId: string): Promise<CampWithLocations> {
     const Camp = await this.prisma.camp.findUnique({
+      include: {
+        locations: true,
+      },
       where: {
         uid: campId,
       },
@@ -30,8 +38,11 @@ export class CampService {
   }
 
   // I can't believe more than one camp exists per name, but it's a concern. Should this be findMany?
-  async getCampByName(campName: string): Promise<Camp> {
+  async getCampByName(campName: string): Promise<CampWithLocations> {
     const Camp = await this.prisma.camp.findFirst({
+      include: {
+        locations: true,
+      },
       where: {
         name: campName,
       },
@@ -86,7 +97,7 @@ export class CampService {
   }
 
   // editCampLocation updates the location of a camp
-  async editCampLocation(campId: string, location: Location): Promise<Camp> {
+  async editCampLocation(campId: string, location: Location): Promise<CampWithLocations> {
     const Camp = await this.prisma.camp.findUnique({
       where: {
         uid: campId,
@@ -99,11 +110,27 @@ export class CampService {
       where: {
         uid: campId,
       },
+      include: {
+        locations: true,
+      },
       data: {
         locations: {
           connectOrCreate: [
           {
-            create: location,
+            create: 
+            {
+              uid: location.uid,
+              createdAt: location.createdAt,
+              updatedAt: location.updatedAt,
+              string: location.string,
+              frontage: location.frontage,
+              intersection: location.intersection,
+              intersection_type: location.intersection_type,
+              dimensions: location.dimensions,
+              hour: location.hour,
+              minute: location.minute,
+              distance: location.distance,
+            },
             where: {
               uid: location.campId,
             },
@@ -152,13 +179,13 @@ export class CampService {
   }
 
   // fetchRemoteCamps fetches the remote camps from the remote API
-  async fetchRemoteCamps(year: string): Promise<Camp[]> {
+  async fetchRemoteCamps(year: string): Promise<CampWithLocations[]> {
     // TODO: move this to a config file / env variable and use the config service
     const url = `https://${this.config.get(
       'BRC_API_TOKEN',
     )}:@api.burningman.org/api/v1/camp?year=${year}`
     const response = await fetch(url);
     const campData = await response.json();
-    return campData.map((camp: Camp) => new CampEntity(camp));
+    return campData.map((camp: CampWithLocations) => new CampEntity(camp));
   }
 }

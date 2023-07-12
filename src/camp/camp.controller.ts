@@ -11,10 +11,15 @@ import {
   // UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Camp } from '@prisma/client';
 // import { JwtGuard } from '../auth/guard';
 import { CampService } from './camp.service';
-import { CampDto, CampEntity, LocationDto } from './dto';
+import {
+  CampDto,
+  CampEntity,
+  CampWithLocations,
+  CampWithLocationsEntity,
+  LocationDto,
+} from './dto';
 import { IResponse } from '../common/interfaces/response.interface';
 
 // @UseGuards(JwtGuard)
@@ -23,17 +28,25 @@ import { IResponse } from '../common/interfaces/response.interface';
 export class CampController {
   constructor(private campService: CampService) {}
 
-  // Returns all camps
+  // Returns all camps with locations if any exist
   @Get()
   async getCamps(): Promise<CampEntity[]> {
     const Camps = await this.campService.getCamps();
-    return Camps.map((Camp: Camp) => new CampEntity(Camp));
+    return Camps.map((Camp: CampWithLocations) => new CampEntity(Camp));
   }
 
   // Returns a single camp by its id
   @Get(':campId')
-  async getCampById(@Param('campId') CampId: string): Promise<CampEntity> {
-    return new CampEntity(await this.campService.getCampById(CampId));
+  async getCampById(@Param('campId') CampId: string): Promise<CampWithLocationsEntity> {
+    return new CampWithLocationsEntity(await this.campService.getCampById(CampId));
+  }
+
+  // Returns a single camp by its name with locations if any exist
+  @Get(':campName')
+  async getCampByName(
+    @Param('campName') CampName: string,
+  ): Promise<CampWithLocationsEntity> {
+    return new CampWithLocationsEntity(await this.campService.getCampByName(CampName));
   }
 
   // Creates a new camp entirely
@@ -56,8 +69,10 @@ export class CampController {
   async editCampLocationById(
     @Param('campId') CampId: string,
     @Body() dto: LocationDto,
-  ): Promise<CampEntity> {
-    return new CampEntity(await this.campService.editCampLocation(CampId, dto));
+  ): Promise<CampWithLocationsEntity> {
+    return new CampWithLocationsEntity(
+      await this.campService.editCampLocation(CampId, dto),
+    );
   }
 
   // Seeds the database with the BRC camp data for a given year. Overwrites existing data.

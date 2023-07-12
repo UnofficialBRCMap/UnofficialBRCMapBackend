@@ -71,4 +71,9 @@ export class LocationDto {
   @IsNumber()
   @IsOptional()
   gps_longitude: number;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  campId: string;
 }

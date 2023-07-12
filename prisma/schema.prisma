@@ -25,8 +25,10 @@ model Location {
   gps_longitude     Float?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-  campId            String
+
+
   Camp   Camp?  @relation(fields: [campId], references: [uid])
+  campId            String
 
   @@map("locations")
 }
