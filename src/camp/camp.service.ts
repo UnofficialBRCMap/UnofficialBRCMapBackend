@@ -16,6 +16,11 @@ export class CampService {
 
   getCamps(): Promise<CampWithLocations[]> {
     return this.prisma.camp.findMany({
+      orderBy: [
+        {
+          name: 'asc',
+        },
+      ],  
       include: {
         locations: true,
       },

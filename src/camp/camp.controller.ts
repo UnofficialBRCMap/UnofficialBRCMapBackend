@@ -59,7 +59,7 @@ export class CampController {
   }
 
   // Allows you to patch the camp location of a single camp
-  @Patch(':campId/location')
+  @Post(':campId/location')
   async addCampLocationByCampId(
     @Param('campId') CampId: string,
     @Body() dto: LocationDto,
