@@ -1,22 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty, IsString, IsOptional, IsNumber } from 'class-validator';
+import { IsString, IsOptional, IsNumber } from 'class-validator';
 
 export class LocationDto {
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  uid: string;
-
-  @ApiProperty()
-  @IsDate()
-  @IsNotEmpty()
-  createdAt: Date;
-
-  @ApiProperty()
-  @IsDate()
-  @IsNotEmpty()
-  updatedAt: Date;
-
   @ApiProperty()
   @IsString()
   @IsOptional()
@@ -71,9 +56,4 @@ export class LocationDto {
   @IsNumber()
   @IsOptional()
   gps_longitude: number;
-
-  @ApiProperty()
-  @IsString()
-  @IsOptional()
-  campId: string;
 }

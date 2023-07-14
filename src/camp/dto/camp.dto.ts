@@ -1,22 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty, IsString, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
 
 export class CampDto {
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  uid: string;
-
-  @ApiProperty()
-  @IsDate()
-  @IsNotEmpty()
-  createdAt: Date;
-
-  @ApiProperty()
-  @IsDate()
-  @IsNotEmpty()
-  updatedAt: Date;
-
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

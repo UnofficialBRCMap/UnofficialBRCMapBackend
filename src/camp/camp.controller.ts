@@ -13,9 +13,10 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 // import { JwtGuard } from '../auth/guard';
 import { CampService } from './camp.service';
-import { CampDto, CampEntity, CampWithLocations, CampWithLocationsEntity } from './dto';
+import { CampDto, CampEntity, CampWithLocations } from './dto';
 import { LocationDto } from '../location/dto';
 import { IResponse } from '../common/interfaces/response.interface';
+import { Camp, Location } from '@prisma/client';
 
 // @UseGuards(JwtGuard)
 @ApiTags('Camps')
@@ -32,16 +33,14 @@ export class CampController {
 
   // Returns a single camp by its id
   @Get(':campId')
-  async getCampById(@Param('campId') CampId: string): Promise<CampWithLocationsEntity> {
-    return new CampWithLocationsEntity(await this.campService.getCampById(CampId));
+  async getCampById(@Param('campId') CampId: string): Promise<Camp> {
+    return await this.campService.getCampById(CampId);
   }
 
   // Returns a single camp by its name with locations if any exist
   @Get(':campName')
-  async getCampByName(
-    @Param('campName') CampName: string,
-  ): Promise<CampWithLocationsEntity> {
-    return new CampWithLocationsEntity(await this.campService.getCampByName(CampName));
+  async getCampByName(@Param('campName') CampName: string): Promise<Camp> {
+    return await this.campService.getCampByName(CampName);
   }
 
   // Creates a new camp entirely
@@ -61,11 +60,11 @@ export class CampController {
 
   // Allows you to patch the camp location of a single camp
   @Patch(':campId/location')
-  async editCampLocationById(
+  async addCampLocationByCampId(
     @Param('campId') CampId: string,
     @Body() dto: LocationDto,
-  ): Promise<CampEntity> {
-    return new CampEntity(await this.campService.editCampLocation(CampId, dto));
+  ): Promise<Location> {
+    return await this.campService.addCampLocation(CampId, dto);
   }
 
   // Seeds the database with the BRC camp data for a given year. Overwrites existing data.

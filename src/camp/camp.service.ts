@@ -8,6 +8,7 @@ import { IResponse } from '../common/interfaces/response.interface';
 import { PrismaService } from '../prisma/prisma.service';
 import { CampDto, CampEntity, CampWithLocations } from './dto';
 import { ConfigService } from '@nestjs/config';
+import { LocationDto } from 'src/location/dto';
 
 @Injectable()
 export class CampService {
@@ -22,7 +23,7 @@ export class CampService {
     );
   }
 
-  async getCampById(campId: string): Promise<CampWithLocations> {
+  async getCampById(campId: string): Promise<Camp> {
     const Camp = await this.prisma.camp.findUnique({
       include: {
         locations: true,
@@ -38,7 +39,7 @@ export class CampService {
   }
 
   // I can't believe more than one camp exists per name, but it's a concern. Should this be findMany?
-  async getCampByName(campName: string): Promise<CampWithLocations> {
+  async getCampByName(campName: string): Promise<Camp> {
     const Camp = await this.prisma.camp.findFirst({
       include: {
         locations: true,
@@ -97,63 +98,86 @@ export class CampService {
   }
 
   // editCampLocation updates the location of a camp
-  async editCampLocation(campId: string, location: Location): Promise<Camp> {
-    const Camp = await this.prisma.camp.findUnique({
-      where: {
-        uid: campId,
-      },
-    });
+  async addCampLocation(campId: string, location: LocationDto): Promise<Location> {
 
-    if (!Camp) throw new NotFoundException('Camp not Found');
 
-    return this.prisma.camp.upsert({
-      where: {
-        uid: campId,
-      },
-      update: {
-        locations: {
-          connectOrCreate: [
-            {
-              create: {
-                string: location.string,
-                frontage: location.frontage,
-                intersection: location.intersection,
-                intersection_type: location.intersection_type,
-                dimensions: location.dimensions,
-                hour: location.hour,
-                minute: location.minute,
-                distance: location.distance,
-              },
-              where: {
-                uid: location.campId,
-              },
-            },
-          ],
+    const newLocation = await this.prisma.location.create({
+      data: {
+        ...location,
+        Camp: {
+          connect: {
+            uid: campId
+          }
         },
       },
-      create: {
-        ...Camp,
-        locations: {
-          connectOrCreate: [
-            {
-              create: {
-                string: location.string,
-                frontage: location.frontage,
-                intersection: location.intersection,
-                intersection_type: location.intersection_type,
-                dimensions: location.dimensions,
-                hour: location.hour,
-                minute: location.minute,
-                distance: location.distance,
-              },
-              where: {
-                uid: location.campId,
-              },
-            },
-          ],
-        },
-      },
-    });
+      include: {
+        Camp: true
+      }
+    })
+    
+    return newLocation
+
+
+
+    // const Camp = await this.prisma.camp.findUnique({
+    //   where: {
+    //     uid: campId,
+    //   },
+    //   include: {
+    //     location: true
+    //   }
+    // });
+
+    // if (!Camp) throw new NotFoundException('Camp not Found');
+
+    // return this.prisma.camp.upsert({
+    //   where: {
+    //     uid: campId,
+    //   },
+    //   update: {
+    //     locations: {
+    //       connectOrCreate: [
+    //         {
+    //           create: {
+    //             string: location.string,
+    //             frontage: location.frontage,
+    //             intersection: location.intersection,
+    //             intersection_type: location.intersection_type,
+    //             dimensions: location.dimensions,
+    //             hour: location.hour,
+    //             minute: location.minute,
+    //             distance: location.distance,
+    //           },
+    //           where: {
+    //             uid: location.campId,
+    //           },
+    //         },
+    //       ],
+    //     },
+    //   },
+    //   create: {
+    //     ...Camp,
+    //     locations: {
+    //       connectOrCreate: [
+    //         {
+    //           create: {
+    //             string: location.string,
+    //             frontage: location.frontage,
+    //             intersection: location.intersection,
+    //             intersection_type: location.intersection_type,
+    //             dimensions: location.dimensions,
+    //             hour: location.hour,
+    //             minute: location.minute,
+    //             distance: location.distance,
+    //           },
+    //           where: {
+    //             uid: location.campId,
+    //           },
+    //         },
+    //       ],
+    //     },
+    //   },
+    // });
   }
 
 
