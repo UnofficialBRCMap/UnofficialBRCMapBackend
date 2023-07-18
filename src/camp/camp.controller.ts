@@ -80,4 +80,11 @@ export class CampController {
   deleteCampById(@Param('campId') CampId: string) {
     return this.campService.deleteCampById(CampId);
   }
+
+  // Creates mock location data for a given number of camps
+  @HttpCode(HttpStatus.OK)
+  @Get('mock_data/:count')
+  async createMockCamps(@Param('count') count: number): Promise<IResponse> {
+    return await this.campService.populateLocationDev(count, 1);
+  }
 }

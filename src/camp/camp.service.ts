@@ -9,6 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CampDto, CampEntity, CampWithLocations } from './dto';
 import { ConfigService } from '@nestjs/config';
 import { LocationDto } from 'src/location/dto';
+import { randomLocation } from 'src/location/location.mocks';
 
 @Injectable()
 export class CampService {
@@ -102,7 +103,7 @@ export class CampService {
     });
   }
 
-  // editCampLocation updates the location of a camp
+  // addCampLocation adds a new camp location to the database
   async addCampLocation(campId: string, location: LocationDto): Promise<Location> {
 
 
@@ -121,68 +122,6 @@ export class CampService {
     })
     
     return newLocation
-
-
-
-    // const Camp = await this.prisma.camp.findUnique({
-    //   where: {
-    //     uid: campId,
-    //   },
-    //   include: {
-    //     location: true
-    //   }
-    // });
-
-    // if (!Camp) throw new NotFoundException('Camp not Found');
-
-    // return this.prisma.camp.upsert({
-    //   where: {
-    //     uid: campId,
-    //   },
-    //   update: {
-    //     locations: {
-    //       connectOrCreate: [
-    //         {
-    //           create: {
-    //             string: location.string,
-    //             frontage: location.frontage,
-    //             intersection: location.intersection,
-    //             intersection_type: location.intersection_type,
-    //             dimensions: location.dimensions,
-    //             hour: location.hour,
-    //             minute: location.minute,
-    //             distance: location.distance,
-    //           },
-    //           where: {
-    //             uid: location.campId,
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   },
-    //   create: {
-    //     ...Camp,
-    //     locations: {
-    //       connectOrCreate: [
-    //         {
-    //           create: {
-    //             string: location.string,
-    //             frontage: location.frontage,
-    //             intersection: location.intersection,
-    //             intersection_type: location.intersection_type,
-    //             dimensions: location.dimensions,
-    //             hour: location.hour,
-    //             minute: location.minute,
-    //             distance: location.distance,
-    //           },
-    //           where: {
-    //             uid: location.campId,
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   },
-    // });
   }
 
 
@@ -230,5 +169,35 @@ export class CampService {
     const response = await fetch(url);
     const campData = await response.json();
     return campData.map((camp: CampWithLocations) => new CampEntity(camp));
+  }
+
+  // populateLocationDev is a helper function that pulls N number of camps, and using the addCampLocation function, creates N fake location data for them
+  async populateLocationDev(campCount: number, locationCount: number): Promise<IResponse> {
+    try {
+      const camps = await this.prisma.camp.findMany({
+        take: campCount,
+      });
+      camps.map(async (camp: Camp) => {
+        for (let i = 0; i < locationCount; i++) {
+          const location = {
+            string: randomLocation(),
+            frontage: "string",
+            intersection: "string",
+            intersection_type: "string",
+            dimensions: "string",
+            hour: 0,
+            minute: 0,
+            distance: 0,
+            category: "string",
+            gps_latitude: 0,
+            gps_longitude: 0
+          };
+          await this.addCampLocation(camp.uid, location);
+        }
+      });
+      return new ResponseSuccess('Populated locations', null);
+    } catch (error) {
+      return new ResponseError('Failed to populate locations', error);
+    }
   }
 }
