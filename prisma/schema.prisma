@@ -26,8 +26,9 @@ model Location {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
+
   Camp   Camp?  @relation(fields: [campId], references: [uid])
-  campId String
+  campId            String
 
   @@map("locations")
 }
@@ -36,7 +37,6 @@ model Camp {
   uid       String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   year          Int
   name          String
   url           String?
