@@ -8,10 +8,13 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
   // UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-// import { JwtGuard } from '../auth/guard';
+import { JwtGuard } from '../auth/guard';
+import { RoleGuard } from 'src/auth/role/role.guard';
+import { Roles } from 'src/auth/roles/roles.decorator';
 import { CampService } from './camp.service';
 import { CampDto, CampEntity, CampWithLocations } from './dto';
 import { LocationDto } from '../location/dto';
@@ -67,6 +70,8 @@ export class CampController {
     return await this.campService.addCampLocation(CampId, dto);
   }
 
+  @Roles('ADMIN')
+  @UseGuards(JwtGuard, RoleGuard)
   // Seeds the database with the BRC camp data for a given year. Overwrites existing data.
   @HttpCode(HttpStatus.OK)
   @Get('brc_data/:year')
@@ -74,6 +79,8 @@ export class CampController {
     return await this.campService.getRemoteCamps(year);
   }
 
+  @Roles('ADMIN')
+  @UseGuards(JwtGuard, RoleGuard)
   // Deletes a single camp by ID
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':campId')
@@ -81,6 +88,8 @@ export class CampController {
     return this.campService.deleteCampById(CampId);
   }
 
+  @Roles('ADMIN')
+  @UseGuards(JwtGuard, RoleGuard)
   // Creates mock location data for a given number of camps
   @HttpCode(HttpStatus.OK)
   @Get('mock_data/:count')
