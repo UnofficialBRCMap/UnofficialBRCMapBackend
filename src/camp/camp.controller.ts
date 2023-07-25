@@ -13,7 +13,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 // import { JwtGuard } from '../auth/guard';
 import { CampService } from './camp.service';
-import { CampDto, CampEntity, CampWithLocations } from './dto';
+import { CampDto, CampEntity, CampWithLocations, CampWithLocationsEntity } from './dto';
 import { LocationDto } from '../location/dto';
 import { IResponse } from '../common/interfaces/response.interface';
 import { Camp, Location } from '@prisma/client';
@@ -26,9 +26,9 @@ export class CampController {
 
   // Returns all camps with locations if any exist
   @Get()
-  async getCamps(): Promise<CampEntity[]> {
+  async getCamps(): Promise<CampWithLocationsEntity[]> {
     const Camps = await this.campService.getCamps();
-    return Camps.map((Camp: CampWithLocations) => new CampEntity(Camp));
+    return Camps.map((Camp: CampWithLocations) => new CampWithLocationsEntity(Camp));
   }
 
   // Returns a single camp by its id
@@ -86,5 +86,13 @@ export class CampController {
   @Get('mock_data/:count')
   async createMockCamps(@Param('count') count: number): Promise<IResponse> {
     return await this.campService.populateLocationDev(count, 1);
+  }
+
+  // Gets a list of all camp locations for a given array of years
+  @HttpCode(HttpStatus.OK)
+  @Get('locations/:years')
+  async getCampLocations(@Param('years') years: string): Promise<Set<string>> {
+    console.log('trying to pull for years: ', years);
+    return await this.campService.fetchAllCampLocations(years);
   }
 }

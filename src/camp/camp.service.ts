@@ -6,7 +6,7 @@ import { PrismaClientValidationError } from "@prisma/client/runtime";
 import { ResponseSuccess, ResponseError } from '../common/dto/response.dto';
 import { IResponse } from '../common/interfaces/response.interface';
 import { PrismaService } from '../prisma/prisma.service';
-import { CampDto, CampEntity, CampWithLocations } from './dto';
+import { CampDto, CampWithLocations, CampWithLocationsEntity } from './dto';
 import { ConfigService } from '@nestjs/config';
 import { LocationDto } from 'src/location/dto';
 import { randomLocation } from 'src/location/location.mocks';
@@ -168,7 +168,32 @@ export class CampService {
     )}:@api.burningman.org/api/v1/camp?year=${year}`
     const response = await fetch(url);
     const campData = await response.json();
-    return campData.map((camp: CampWithLocations) => new CampEntity(camp));
+    return campData.map((camp: CampWithLocations) => new CampWithLocationsEntity(camp));
+  }
+
+  // fetchAllCampLocations pulls several years worth of camp data from the BRC API, and pulls the location from each camp and returns an array of locations
+  async fetchAllCampLocations(years: string): Promise<Set<string>> {
+    console.log("starting process for years", years)
+    const locations: string[] = [];
+    const locationsSet = new Set<string>();
+    const yearsArray = years.split(",");
+    for (const year of yearsArray) {
+      console.log("fetching year", year)
+      const url = `https://${this.config.get(
+        'BRC_API_TOKEN',
+      )}:@api.burningman.org/api/v1/camp?year=${year}`
+      const response = await fetch(url);
+      const campData = await response.json();
+      console.log("fetched camps", campData)
+      campData.map((camp: { location_string: string; }) => {
+if (camp.location_string) {
+          locations.push(camp.location_string);
+        }
+      });
+    }
+    locations.map((location: string) => locationsSet.add(location));
+    console.log(locationsSet);
+    return locationsSet;
   }
 
   // populateLocationDev is a helper function that pulls N number of camps, and using the addCampLocation function, creates N fake location data for them
