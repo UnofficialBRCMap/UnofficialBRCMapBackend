@@ -5,7 +5,7 @@ export class ArtDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  id: string;
+  uid: string;
 
   @ApiProperty()
   @IsDate()
@@ -35,6 +35,36 @@ export class ArtDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
+  artist?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  category?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  program?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  donation_link?: string;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  guided_tours?: number;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  self_guided_tour_map?: number;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
   website?: string;
 
   @ApiProperty()
@@ -53,12 +83,12 @@ export class ArtDto {
   hometown?: string;
 
   @ApiProperty()
-  @IsString()
-  @IsOptional()
-  location_string?: string;
-
-  @ApiProperty()
   @IsNumber()
   @IsOptional()
   locationId?: number;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  thumbnail_url?: string;
 }
