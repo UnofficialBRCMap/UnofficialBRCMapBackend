@@ -116,11 +116,14 @@ export class CampService {
         },
       },
       include: {
+
         Camp: true
       }
     })
 
     return newLocation
+
+  
   }
 
   // getRemoteCamps fetches the cammp information from the BRC API and seeds the database

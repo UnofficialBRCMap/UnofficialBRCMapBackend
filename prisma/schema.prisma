@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Location {
-  uid               String  @unique
+  uid               String  @id @default(cuid())
   string            String?
   frontage          String?
   intersection      String?
@@ -23,18 +23,18 @@ model Location {
   category          String?
   gps_latitude      Float?
   gps_longitude     Float?
-  location          Camp?   @relation(fields: [uid], references: [uid])
-  location_art      Art?    @relation(fields: [location_art_uid], references: [uid])
-  location_art_uid  String  @unique
+  Camp              Camp?   @relation(fields: [campId], references: [uid])
+  campId            String?
+  artId             String?
+  Art               Art?    @relation(fields: [artId], references: [uid])
 
-  @@id([uid, location_art_uid])
   @@map("locations")
 }
 
 model Camp {
-  uid       String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  uid           String     @id @default(cuid())
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   year          Int
   name          String
   url           String?
@@ -64,7 +64,7 @@ model Art {
   guided_tours         Int?
   self_guided_tour_map Int?
   thumbnail_url        String?
-  locations             Location[]
+  locations            Location[]
 
   @@map("arts")
 }
