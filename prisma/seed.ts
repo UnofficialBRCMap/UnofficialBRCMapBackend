@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { camps, users } from './seed-data';
+import { camps, users, arts } from './seed-data';
 
 const prisma = new PrismaClient();
 
@@ -13,9 +13,9 @@ async function main() {
     await prisma.user.create({ data: user });
   }
 
-  // for (const art of arts) {
-  //   await prisma.art.create({ data: art });
-  // }
+  for (const art of arts) {
+    await prisma.art.create({ data: art });
+  }
 
   for (const camp of camps) {
     await prisma.camp.create({ data: camp });

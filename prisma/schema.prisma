@@ -23,7 +23,8 @@ model Location {
   category          String?
   gps_latitude      Float?
   gps_longitude     Float?
-  location          Camp?   @relation(fields: [uid], references: [uid])
+  location          Camp?  @relation(fields: [uid], references: [uid])
+  location_art        Art?    @relation(fields: [uid], references: [uid])
 
   @@map("locations")
 }
@@ -44,28 +45,29 @@ model Camp {
   @@map("camps")
 }
 
-// model Art {
-//   id        String   @id @default(cuid())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
+model Art {
+  uid        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-//   year                 String
-//   name                 String
-//   url                  String?
-//   contact_email        String?
-//   hometown             String?
-//   description          String?
-//   artist               String?
-//   category             String?
-//   program              String?
-//   donation_link        String?
-//   guided_tours         Int?
-//   self_guided_tour_map Int?
-//   location            Location?
-//   thumbnail_url        String?
+  year                 String
+  name                 String
+  url                  String?
+  contact_email        String?
+  hometown             String?
+  description          String?
+  artist               String?
+  category             String?
+  program              String?
+  donation_link        String?
+  guided_tours         Int?
+  self_guided_tour_map Int?
+  thumbnail_url        String?
+  location             Location?
 
-//   @@map("arts")
-// }
+
+  @@map("arts")
+}
 
 model User {
   id        String   @id @default(cuid())
