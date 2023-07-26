@@ -64,7 +64,7 @@ model Art {
   guided_tours         Int?
   self_guided_tour_map Int?
   thumbnail_url        String?
-  location             Location?
+  locations             Location[]
 
   @@map("arts")
 }

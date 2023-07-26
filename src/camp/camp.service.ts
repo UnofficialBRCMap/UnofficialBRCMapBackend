@@ -106,7 +106,6 @@ export class CampService {
   // addCampLocation adds a new camp location to the database
   async addCampLocation(campId: string, location: LocationDto): Promise<Location> {
 
-
     const newLocation = await this.prisma.location.create({
       data: {
         ...location,
@@ -120,9 +119,28 @@ export class CampService {
         Camp: true
       }
     })
-    
+
     return newLocation
   }
+
+  // async addCampLocation(campId: string, location: LocationDto): Promise<Location> {
+
+  //   const newLocation = await this.prisma.location.create({
+  //     data: {
+  //       ...location,
+  //       Camp: {
+  //         connect: {
+  //           uid: campId
+  //         }
+  //       },
+  //     },
+  //     include: {
+  //       Camp: true
+  //     }
+  //   })
+    
+  //   return newLocation
+  // }
 
 
   // getRemoteCamps fetches the cammp information from the BRC API and seeds the database
@@ -171,7 +189,7 @@ export class CampService {
     return campData.map((camp: CampWithLocations) => new CampEntity(camp));
   }
 
-  // populateLocationDev is a helper function that pulls N number of camps, and using the addCampLocation function, creates N fake location data for them
+   // populateLocationDev is a helper function that pulls N number of camps, and using the addCampLocation function, creates N fake location data for them
   async populateLocationDev(campCount: number, locationCount: number): Promise<IResponse> {
     try {
       const camps = await this.prisma.camp.findMany({

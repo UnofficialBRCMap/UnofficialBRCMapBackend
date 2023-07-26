@@ -15,25 +15,25 @@ export class CampDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  description?: string;
+  description: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  website?: string;
+  website: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  url?: string;
+  url: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  contact_email?: string;
+  contact_email: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  hometown?: string;
+  hometown: string;
 }
