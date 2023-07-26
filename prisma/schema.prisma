@@ -35,14 +35,13 @@ model Camp {
   uid       String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   year          Int
   name          String
   url           String?
   contact_email String?
   hometown      String?
   description   String?
-  location      Location?
+  locations     Location[]
 
   @@map("camps")
 }
