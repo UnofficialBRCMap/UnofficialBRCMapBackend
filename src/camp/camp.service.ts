@@ -123,26 +123,6 @@ export class CampService {
     return newLocation
   }
 
-  // async addCampLocation(campId: string, location: LocationDto): Promise<Location> {
-
-  //   const newLocation = await this.prisma.location.create({
-  //     data: {
-  //       ...location,
-  //       Camp: {
-  //         connect: {
-  //           uid: campId
-  //         }
-  //       },
-  //     },
-  //     include: {
-  //       Camp: true
-  //     }
-  //   })
-    
-  //   return newLocation
-  // }
-
-
   // getRemoteCamps fetches the cammp information from the BRC API and seeds the database
   async getRemoteCamps(year: string): Promise<IResponse> {
     try {
