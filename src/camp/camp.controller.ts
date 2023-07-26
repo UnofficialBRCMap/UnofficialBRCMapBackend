@@ -87,12 +87,4 @@ export class CampController {
   async createMockCamps(@Param('count') count: number): Promise<IResponse> {
     return await this.campService.populateLocationDev(count, 1);
   }
-
-  // Gets a list of all camp locations for a given array of years
-  @HttpCode(HttpStatus.OK)
-  @Get('locations/:years')
-  async getCampLocations(@Param('years') years: string): Promise<Set<string>> {
-    console.log('trying to pull for years: ', years);
-    return await this.campService.fetchAllCampLocations(years);
-  }
 }
