@@ -9,7 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ArtDto, ArtEntity, ArtWithLocations } from './dto';
 import { ConfigService } from '@nestjs/config';
 import { LocationDto } from 'src/location/dto';
-import { randomLocation } from 'src/location/location.mocks';
+import { randomArtLocation } from 'src/location/location.mocks';
 
 @Injectable()
 export class ArtService {
@@ -106,9 +106,11 @@ export class ArtService {
   // addArtLocation adds a new art location to the database
   async addArtLocation(artId: string, location: LocationDto): Promise<Location> {
 
+    const locationWithGPS = await this.generateGPSCords(location);
+
     const newLocation = await this.prisma.location.create({
       data: {
-        ...location,
+        ...locationWithGPS,
         Art: {
           connect: {
             uid: artId
@@ -167,21 +169,60 @@ export class ArtService {
     const url = `https://${this.config.get(
       'BRC_API_TOKEN',
     )}:@api.burningman.org/api/v1/art?year=${year}`
-    const response = await fetch(url);
-    const artData = await response.json();
+
+    const res = await fetch(url);
+
+    const artData = await res.json();
     return artData.map((art: ArtWithLocations) => new ArtEntity(art));
   }
 
+  // generateGPSCords is a helper function that takes in the location data and makes a request to the remote api to generate the gps cords
+  async generateGPSCords(location: LocationDto): Promise<LocationDto> {
+    const url = this.config.get('GET_ART_COORDS')
+    let res
+    let gpsData
+    const formData = new URLSearchParams();
+    formData.append('feet', location.distance.toString());
+    formData.append('hour', location.hour.toString());
+    formData.append('minute', location.minute.toString());
+    
+
+    try {
+      res = await fetch(url, {
+        method: 'POST',
+        body: formData,
+        });
+      console.log("Response", res)
+
+      if (res.status >= 400) {
+        throw new Error("Bad response from server");
+      }
+
+      gpsData = await res.json();
+      console.log("GPS Data", gpsData)
+
+    } catch (err) {
+      console.error(err);
+    }
+
+    location.gps_latitude =gpsData[0];
+    location.gps_longitude = gpsData[1];
+    return location;
+  }
+
+
    // populateLocationDev is a helper function that pulls N number of arts, and using the addArtLocation function, creates N fake location data for them
   async populateLocationDev(artCount: number, locationCount: number): Promise<IResponse> {
+    const XY = randomArtLocation();
     try {
       const arts = await this.prisma.art.findMany({
         take: artCount,
       });
+
       arts.map(async (art: Art) => {
         for (let i = 0; i < locationCount; i++) {
           const location = {
-            string: randomLocation(),
+            string: "whatever",
             frontage: "string",
             intersection: "string",
             intersection_type: "string",
@@ -190,8 +231,8 @@ export class ArtService {
             minute: 0,
             distance: 0,
             category: "string",
-            gps_latitude: 0,
-            gps_longitude: 0
+            gps_latitude: XY[0],
+            gps_longitude: XY[1],
           };
           await this.addArtLocation(art.uid, location);
         }

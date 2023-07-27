@@ -4,6 +4,24 @@ export const randomLocation = () => {
   return CAMP_ADDRESS_OPTIONS[randomIndex];
 };
 
+const fencePoints = [
+  40.782814, -119.233566, 40.807028, -119.217274, 40.802722, -119.181931, 40.775857,
+  -119.176407, 40.763558, -119.208301,
+];
+
+// randomArtLocation is a function that takes in a polygon of N points, and returns a random point within the area of that polygon
+export const randomArtLocation = () => {
+  const minX = Math.min(...fencePoints.filter((_, i) => i % 2 === 0));
+  const maxX = Math.max(...fencePoints.filter((_, i) => i % 2 === 0));
+  const minY = Math.min(...fencePoints.filter((_, i) => i % 2 !== 0));
+  const maxY = Math.max(...fencePoints.filter((_, i) => i % 2 !== 0));
+
+  const randomX = Math.random() * (maxX - minX) + minX;
+  const randomY = Math.random() * (maxY - minY) + minY;
+
+  return [randomX, randomY];
+};
+
 export const CAMP_ADDRESS_OPTIONS = [
   '2:00 & A',
   '2:00 & B',
