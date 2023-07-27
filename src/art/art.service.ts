@@ -151,13 +151,13 @@ export class ArtService {
         await this.prisma.art.create({ data: Art })
         ));
 
-      return new ResponseSuccess('UPDATED DB WITH BRC CAMPS DATA', null);
+      return new ResponseSuccess('UPDATED DB WITH BRC ARTS DATA', null);
     } catch (error) {
       if (error instanceof PrismaClientValidationError) { 
       // TODO: Figure out why the error isn't showing up right
-      return new ResponseError('FAILED TO UPDATE DB WITH BRC CAMPS DATA', error.message);
+      return new ResponseError('FAILED TO UPDATE DB WITH BRC ARTS DATA', error.message);
       }
-      return new ResponseError('FAILED TO UPDATE DB WITH BRC CAMPS DATA', error);
+      return new ResponseError('FAILED TO UPDATE DB WITH BRC ARTS DATA', error);
     }
   }
 

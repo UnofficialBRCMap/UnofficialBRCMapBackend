@@ -77,6 +77,6 @@ export class ArtWithLocationsEntity {
     this.guided_tours = art.guided_tours;
     this.self_guided_tour_map = art.self_guided_tour_map;
     this.thumbnail_url = art.thumbnail_url;
-    this.locations = art.locations;
+    // this.locations = art.locations;
   }
 }
