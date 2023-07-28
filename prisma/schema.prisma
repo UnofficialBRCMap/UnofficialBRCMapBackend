@@ -23,49 +23,51 @@ model Location {
   category          String?
   gps_latitude      Float?
   gps_longitude     Float?
-  location          Camp?   @relation(fields: [uid], references: [uid])
+  Camp              Camp?   @relation(fields: [campId], references: [uid])
+  campId            String?
+  artId             String?
+  Art               Art?    @relation(fields: [artId], references: [uid])
 
   @@map("locations")
 }
 
 model Camp {
-  uid       String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  uid           String     @id @default(cuid())
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   year          Int
   name          String
   url           String?
   contact_email String?
   hometown      String?
   description   String?
-  location      Location?
+  locations     Location[]
 
   @@map("camps")
 }
 
-// model Art {
-//   id        String   @id @default(cuid())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
+model Art {
+  uid       String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-//   year                 String
-//   name                 String
-//   url                  String?
-//   contact_email        String?
-//   hometown             String?
-//   description          String?
-//   artist               String?
-//   category             String?
-//   program              String?
-//   donation_link        String?
-//   guided_tours         Int?
-//   self_guided_tour_map Int?
-//   location            Location?
-//   thumbnail_url        String?
+  year                 Int
+  name                 String
+  url                  String?
+  contact_email        String?
+  hometown             String?
+  description          String?
+  artist               String?
+  category             String?
+  program              String?
+  donation_link        String?
+  guided_tours         Int?
+  self_guided_tour_map Int?
+  thumbnail_url        String?
+  locations            Location[]
 
-//   @@map("arts")
-// }
+  @@map("arts")
+}
 
 model User {
   id        String   @id @default(cuid())

@@ -8,6 +8,7 @@ import { LoggingInterceptor } from './common/logging.interceptor';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { CampModule } from './camp/camp.module';
+import { ArtModule } from './art/art.module';
 
 const validationPipeOptions = {
   enableDebugMessages: true,
@@ -31,6 +32,7 @@ const validationPipeOptions = {
     AuthModule,
     UserModule,
     CampModule,
+    ArtModule,
     PrismaModule,
   ],
   providers: [

@@ -18,6 +18,13 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalFilters(new PrismaClientExceptionFilter(app.get(HttpAdapterHost)));
 
+  // Validation
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     whitelist: true,
+  //   })
+  // );
+
   app.enableVersioning({
     defaultVersion: '1',
     type: VersioningType.URI,
