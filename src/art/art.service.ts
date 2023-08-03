@@ -205,7 +205,7 @@ export class ArtService {
       console.error(err);
     }
 
-    location.gps_latitude =gpsData[0];
+    location.gps_latitude = gpsData[0];
     location.gps_longitude = gpsData[1];
     return location;
   }
