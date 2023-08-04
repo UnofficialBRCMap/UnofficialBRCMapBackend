@@ -103,8 +103,23 @@ export class CampService {
     });
   }
 
+  // formatString turns a location string to array, split on the & character so we can use them to populate frontages and intersections
+  formatString(string: string): string[] {
+    if (string.includes('&')) {
+    return string.split('&').map((item) => item.trim());
+    }
+    if (string.includes('@')) {
+      return string.split('@').map((item) => item.trim());
+    }
+    return  [string, '']
+  }
+
+
   // addCampLocation adds a new camp location to the database
   async addCampLocation(campId: string, location: LocationDto): Promise<Location> {
+    const frontages = this.formatString(location.string);
+    location.frontage = frontages[0];
+    location.intersection = frontages[1];
 
     const newLocation = await this.prisma.location.create({
       data: {
@@ -116,14 +131,34 @@ export class CampService {
         },
       },
       include: {
-
         Camp: true
       }
     })
 
     return newLocation
+  }
 
-  
+  // updateAllLocationsWithFrontages updates all locations with the frontage and intersection data
+  async updateAllLocationsWithFrontages(): Promise<IResponse> {
+    try {
+      const locations = await this.prisma.location.findMany();
+      locations.map(async (location) => {
+        if (location.string === null) return;
+        const frontages = this.formatString(location.string);
+        await this.prisma.location.update({
+          where: {
+            uid: location.uid
+          },
+          data: {
+            frontage: frontages[0],
+            intersection: frontages[1]
+          }
+        })
+      })
+      return new ResponseSuccess('Updated all locations with frontages', null);
+    } catch (error) {
+      return new ResponseError('Failed to update all locations with frontages', error);
+    }
   }
 
   // getRemoteCamps fetches the cammp information from the BRC API and seeds the database

@@ -87,4 +87,11 @@ export class CampController {
   async createMockCamps(@Param('count') count: number): Promise<IResponse> {
     return await this.campService.populateLocationDev(count, 1);
   }
+
+  // Updates DB with frontages and intersections from the reported data
+  @HttpCode(HttpStatus.OK)
+  @Get('update_frontages')
+  async updateFrontages(): Promise<IResponse> {
+    return await this.campService.updateAllLocationsWithFrontages();
+  }
 }
