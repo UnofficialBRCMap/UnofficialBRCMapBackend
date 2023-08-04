@@ -104,22 +104,33 @@ export class CampService {
   }
 
   // formatString turns a location string to array, split on the & character so we can use them to populate frontages and intersections
-  formatString(string: string): string[] {
+  formatString(string: string): {frontage: string, intersection: string} {
+    let fi = {
+      frontage: '',
+      intersection: ''
+    }
+
     if (string.includes('&')) {
-    return string.split('&').map((item) => item.trim());
+      const frontages = string.split('&').map((item) => item.trim());
+      fi.frontage = frontages[0];
+      fi.intersection = frontages[1];
+      return fi;
     }
     if (string.includes('@')) {
-      return string.split('@').map((item) => item.trim());
+      const frontages = string.split('@').map((item) => item.trim());
+      fi.frontage = frontages[0];
+      fi.intersection = frontages[1];
+      return fi;
     }
-    return  [string, '']
+    return  fi = { frontage: string, intersection: '' };
   }
 
 
   // addCampLocation adds a new camp location to the database
   async addCampLocation(campId: string, location: LocationDto): Promise<Location> {
-    const frontages = this.formatString(location.string);
-    location.frontage = frontages[0];
-    location.intersection = frontages[1];
+    const f = this.formatString(location.string);
+    location.frontage = f.frontage;
+    location.intersection = f.intersection;
 
     const newLocation = await this.prisma.location.create({
       data: {
